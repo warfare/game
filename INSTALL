@@ -1,0 +1,114 @@
+INSTALL
+
+---------------------------------------------------------
+------------------------- LINUX -------------------------
+---------------------------------------------------------
+
+On linux you need to install the following libraries:
+
+GLFW (http://glfw.sourceforge.net)
+GLEW (http://glew.sourceforge.net)
+Freeimage (http://freeimage.sourceforge.net)
+FreeType (http://www.freetype.org)
+OpenAL (http://connect.creativelabs.com/openal)
+Ogg Vorbis (http://www.vorbis.com)
+lua (http://www.lua.org)
+Bullet Physics (http://bulletphysics.com)
+enet (http://enet.bespin.org/)
+Assimp (http://assimp.sourceforge.net/)
+
+The chances are that you already have some of them. Most
+of them can be installed from the package repositories.
+Bullet Physics and enet aren't present in many repos, so
+you'll have to compile and install them manually. For
+enet, the procedure should be just:
+
+./configure && make && make install
+
+For Bullet, you'll have to gerate the makefiles first
+with something like cmake, and then do:
+
+make && make install
+
+If you are using cmake to generate bullet makefiles,
+the version 2.76 version of bullet doesn't generate
+the installation script with cmake unless you supply
+it with a flag:
+
+cmake . -G "Unix Makefiles" -DINSTALL_LIBS=ON
+
+Cmake is the primary build system for Assimp too. Assimp
+requires boost so you'll have to install that before
+compoling. Use the following command to configure, compile
+and install Assimp:
+
+cmake . && make && make install
+
+After you got all of the libraries installed, just
+type the following command and blendelf should compile:
+
+make
+
+If you want to make a release build of blendelf, or a
+shared library release build of blendelf, use the following
+commands:
+
+(for static release): make static
+(for shared release): make shared
+
+---------------------------------------------------------
+------------------------- MACOSX ------------------------
+---------------------------------------------------------
+
+First you need to compile Bullet Physics and GLFW
+
+Download from Bullet Physics from:
+
+http://code.google.com/p/bullet/downloads/list
+
+Extract and generate XCode project with:
+
+cmake . -G Xcode
+
+Then build it using XCode a release version.
+
+For GLFW, check out the glfw svn:
+
+svn co https://glfw.svn.sourceforge.net/svnroot/glfw glfw
+
+Compile with:
+
+make cocoa
+
+Install the other dependencies with macports or following
+the install instructions of the individual libraries.
+
+sudo port install lua
+sudo port install libvorbis
+sudo port install glew
+sudo port install freeimage
+sudo port install freetype
+sudo port install libenet
+
+Now compile assimp, but first install boost
+
+sudo port install boost
+
+Get source from http://assimp.sourceforge.net/main_downloads.html
+
+Extract an generate makefiles with:
+
+cmake .
+
+run make and if it fails then edit tools/assimp_cmd/CMakeFiles/assimp_cmd.dir/flags.make
+and add -I/opt/local/include at C_FLAGS and CXX_FLAGS vars, then re-run make
+
+Install it with sudo make install and only rest blendelf ...
+
+Review Makefile.osx for path of bullet and glfw
+Compile the BlendELF code with:
+
+make -f Makefile.osx
+
+Tested on Snow Leopard (10.6 x64) with a 9400M and Leopard (10.5 x32) with 8800GS
+
